@@ -7,6 +7,8 @@ get_mem_info:
         push    di
         push    bp
 
+        cdecl	puts, .s0
+
         mov     bp, 0 ; 行数
         mov     ebx, 0 ;　インデックスを初期化
 .10L:
@@ -53,7 +55,20 @@ get_mem_info:
         cmp     ebx, 0
         jne     .10L
 .10E:
+        cdecl	puts, .s1
+        pop     bp     
+        pop     di
+        pop     si
+        pop     edx
+        pop     ecx    
+        pop     ebx    
+        pop     eax
 
+        ret
+
+.s0     db " E820 Memory Map:", 0x0A, 0x0D
+		db " Base_____________ Length___________ Type____", 0x0A, 0x0D, 0
+.s1 	db " ----------------- ----------------- --------", 0x0A, 0x0D, 0
 .s2     db      " <more...>", 0
 .s3     db      0x0D, "          ", 0x0D, 0
 ALIGN 4, db 0

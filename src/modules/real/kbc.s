@@ -35,7 +35,7 @@ KBC_data_read:
 .10L:
         in      al, 0x64
         test    al, 0x01
-        loopnz  .10L
+        loopz  .10L
 
         cmp     cx, 0
         jz      .20E
