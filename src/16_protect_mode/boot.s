@@ -256,9 +256,73 @@ stage_6:
         mov     ax, 0x0012
         int     0x10
 
-        jmp     $
+        jmp     stage_7
 
 .s0     db      "6th stage...", 0x0A, 0x0D
         db      " [Push SPACE key to change from real mode to protect mode...", 0x0A, 0x0D, 0
+
+; セグメントディスクリプタテーブル
+ALIGN 4,        db      0
+GDT:
+        dq      0x00_0_0_0_0_000000_0000 ; NULL
+.cs     dq      0x00_C_F_9_A_000000_FFFF ; CODE
+.ds     dq      0x00_C_F_9_2_000000_FFFF ; DATA
+.gdt_end
+
+; セレクタ
+SEL_CODE        equ     .cs - GDT
+SEL_DATA        equ     .ds - GDT
+
+; GDTR
+GDTR:
+        dw      GDT.gdt_end - GDT - 1 ; ディスクリプタテーブルのリミット
+        dd      GDT ; ディスクリプタテーブルのアドレス
+
+; IDTR
+IDTR:
+        dw      0 ; 割り込み禁止にするため0に設定
+        dd      0 ; 割り込み禁止にするため0に設定
+
+; ブート処理の第七ステージ
+stage_7:
+        cli
+
+        ; GDTのロード
+        lgdt    [GDTR]
+        lidt    [IDTR]
+
+        ; プロテクトモードへ移行
+        mov     eax, cr0
+        or      ax, 1
+        mov     cr0, eax
+
+        jmp     $ + 2 ; 先読みしたリアルモード時のコードをクリア
+
+        ; セグメント間ジャンプ
+[BITS 32]
+        db      0x66
+        jmp     SEL_CODE:CODE_32
+
+; 32ビットコード開始
+CODE_32:
+        ; セレクタを初期化
+        ; データ用セグメントだけでいいけど、一応残りも初期化
+        mov     ax, SEL_DATA
+        mov     ds, ax
+        mov     es, ax
+        mov     fs, ax
+        mov     gs, ax
+        mov     ss, ax
+
+        ; カーネルをコピー
+        mov     ecx, KERNEL_SIZE / 4
+        mov     esi, BOOT_END ; ブートプログラムの直後にカーネルが配置されている
+        mov     edi, KERNEL_LOAD
+        cld
+        rep movsd
+
+        ; カーネル処理に移行
+        jmp     KERNEL_LOAD
+
 
         times   BOOT_SIZE - ($ - $$)   db 0x00 ; 8K byte
