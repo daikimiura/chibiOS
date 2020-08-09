@@ -12,11 +12,13 @@ vga_set_read_plane:
         mov     dx, 0x03CE
         out     dx, ax
 
-        pop     eax
         pop     edx
+        pop     eax
 
         mov     esp,ebp
         pop     ebp
+
+        ret
 
 vga_set_write_plane:
         push    ebp
@@ -32,11 +34,13 @@ vga_set_write_plane:
         mov     dx, 0x03C4
         out     dx, ax
 
-        pop     eax
         pop     edx
+        pop     eax
 
         mov     esp,ebp
         pop     ebp
+
+        ret
 
 vram_font_copy:
         push    ebp
