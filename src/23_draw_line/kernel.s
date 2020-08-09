@@ -1,89 +1,61 @@
-;************************************************************************
-;
-;	�J�[�l����
-;
-;************************************************************************
+%include        "../include/define.s"
+%include        "../include/macro.s"
 
-;************************************************************************
-;	�}�N��
-;************************************************************************
-%include	"../include/define.s"
-%include	"../include/macro.s"
-
-		ORG		KERNEL_LOAD						; �J�[�l���̃��[�h�A�h���X
-
+        ORG     KERNEL_LOAD
 [BITS 32]
-;************************************************************************
-;	�G���g���|�C���g
-;************************************************************************
+
 kernel:
-		;---------------------------------------
-		; �t�H���g�A�h���X���擾
-		;---------------------------------------
-		mov		esi, BOOT_LOAD + SECT_SIZE		; ESI   = 0x7C00 + 512
-		movzx	eax, word [esi + 0]				; EAX   = [ESI + 0] // �Z�O�����g
-		movzx	ebx, word [esi + 2]				; EBX   = [ESI + 2] // �I�t�Z�b�g
-		shl		eax, 4							; EAX <<= 4;
-		add		eax, ebx						; EAX  += EBX;
-		mov		[FONT_ADR], eax					; FONT_ADR[0] = EAX;
+        ; フォントアドレスを取得
+        mov     esi, BOOT_LOAD + SECT_SIZE
+        movzx   eax, word [esi + 0] ; セグメント FONT.sg
+        movzx   ebx, word [esi + 2] ; オフセット FONT.off
+        shl     eax, 4
+        add     eax, ebx ; セグメント:オフセット の形にする
+        mov     [FONT_ADR], eax
 
-		;---------------------------------------
-		; �t�H���g�̈ꗗ�\��
-		;---------------------------------------
-		cdecl	draw_font, 63, 13				; // �t�H���g�̈ꗗ�\��
-		cdecl	draw_color_bar, 63, 4			; // �J���[�o�[�̕\��
+        ; フォントの表示
+        cdecl   draw_font, 63, 13
 
-		;---------------------------------------
-		; ������̕\��
-		;---------------------------------------
-		cdecl	draw_str, 25, 14, 0x010F, .s0	; draw_str();
+        ; 文字列の表示
+        cdecl   draw_str, 25, 14, 0x010F, .s0
 
-		;---------------------------------------
-		; ����`��
-		;---------------------------------------
-		cdecl	draw_line, 100, 100,   0,   0, 0x0F
-		cdecl	draw_line, 100, 100, 200,   0, 0x0F
-		cdecl	draw_line, 100, 100, 200, 200, 0x0F
-		cdecl	draw_line, 100, 100,   0, 200, 0x0F
+        ; カラーバーの表示
+        cdecl   draw_color_bar, 63, 4
 
-		cdecl	draw_line, 100, 100,  50,   0, 0x02
-		cdecl	draw_line, 100, 100, 150,   0, 0x03
-		cdecl	draw_line, 100, 100, 150, 200, 0x04
-		cdecl	draw_line, 100, 100,  50, 200, 0x05
+        ; ピクセル単位での表示
+        cdecl   draw_line, 100, 100, 0, 0, 0x0F 
+        cdecl   draw_line, 100, 100, 200, 0, 0x0F 
+        cdecl   draw_line, 100, 100, 200, 200, 0x0F 
+        cdecl   draw_line, 100, 100, 0, 200, 0x0F 
 
-		cdecl	draw_line, 100, 100,   0,  50, 0x02
-		cdecl	draw_line, 100, 100, 200,  50, 0x03
-		cdecl	draw_line, 100, 100, 200, 150, 0x04
-		cdecl	draw_line, 100, 100,   0, 150, 0x05
+        cdecl   draw_line, 100, 100, 50, 0, 0x02
+        cdecl   draw_line, 100, 100, 150, 0, 0x03 
+        cdecl   draw_line, 100, 100, 150, 200, 0x04 
+        cdecl   draw_line, 100, 100, 50, 200, 0x05
 
-		cdecl	draw_line, 100, 100, 100,   0, 0x0F
-		cdecl	draw_line, 100, 100, 200, 100, 0x0F
-		cdecl	draw_line, 100, 100, 100, 200, 0x0F
-		cdecl	draw_line, 100, 100,   0, 100, 0x0F
+        cdecl   draw_line, 100, 100, 0, 50, 0x02 
+        cdecl   draw_line, 100, 100, 200, 50, 0x03 
+        cdecl   draw_line, 100, 100, 200, 150, 0x04 
+        cdecl   draw_line, 100, 100, 0, 150, 0x05 
 
-		;---------------------------------------
-		; �����̏I��
-		;---------------------------------------
-		jmp		$								; while (1) ; // �������[�v
+        cdecl   draw_line, 100, 100, 100, 0, 0x0F 
+        cdecl   draw_line, 100, 100, 200, 100, 0x0F 
+        cdecl   draw_line, 100, 100, 100, 200, 0x0F 
+        cdecl   draw_line, 100, 100, 0, 100, 0x0F 
 
-.s0:	db	" Hello, kernel! ", 0
+        jmp     $
 
-ALIGN 4, db 0
-FONT_ADR:	dd	0
+.s0     db      "Hello, kernel!", 0
+ALIGN 4, db     0
+FONT_ADR: dd     0
 
-;************************************************************************
-;	���W���[��
-;************************************************************************
-%include	"../modules/protect/vga.s"
-%include	"../modules/protect/draw_char.s"
-%include	"../modules/protect/draw_font.s"
-%include	"../modules/protect/draw_str.s"
-%include	"../modules/protect/draw_color_bar.s"
-%include	"../modules/protect/draw_pixel.s"
-%include	"../modules/protect/draw_line.s"
+; モジュール
+%include        "../modules/protect/vga.s"
+%include        "../modules/protect/draw_char.s"
+%include        "../modules/protect/draw_font.s"
+%include        "../modules/protect/draw_str.s"
+%include        "../modules/protect/draw_color_bar.s"
+%include        "../modules/protect/draw_pixel.s"
+%include        "../modules/protect/draw_line.s"
 
-;************************************************************************
-;	�p�f�B���O
-;************************************************************************
-		times KERNEL_SIZE - ($ - $$) db 0x00	; �p�f�B���O
-
+        times KERNEL_SIZE - ($ - $$)    db  0
