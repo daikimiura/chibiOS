@@ -102,3 +102,45 @@ vram_font_copy:
         pop     ebp
         
         ret
+
+vram_bit_copy:
+        push    ebp
+        mov     ebp, esp
+
+        push    esi
+        push    edi
+        push    eax
+        push    ebx
+        push    ecx
+        push    edx
+
+
+        mov     edi, [ebp + 12] ; VRAMアドレス
+        movzx   eax, byte [ebp + 16] ; プレーン
+        movzx   ebx, word [ebp + 20] ; 色
+
+        ; マスクデータの作成
+        test    bl, al
+        setz    bl
+        dec     bl
+
+        mov     al, [ebp + 8] ; 出力ビットパターン
+        mov     ah, al
+        not     ah
+
+        and     ah, [edi]
+        and     al, bl
+        or      al, ah
+        mov     [edi], al
+
+        pop    edx     
+        pop    ecx
+        pop    ebx
+        pop    eax
+        pop    edi
+        pop    esi
+
+        mov     esp, ebp
+        pop     ebp
+        
+        ret
