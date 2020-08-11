@@ -1,0 +1,29 @@
+rtc_get_time:
+        push    ebp
+        mov     ebp, esp
+
+        push    ebx
+
+        mov     al, 0x04
+        out     0x70, al
+        in      al, 0x71
+        shl     eax, 8 ; 読み取ったデータを上位ビットに退避
+
+        mov     al, 0x02
+        out     0x70, al
+        in      al, 0x71
+        shl     eax, 8 ; 読み取ったデータを上位ビットに退避
+
+        mov     al, 0x00
+        out     0x70, al
+        in      al, 0x71
+
+        and     eax, 0x00_FF_FF_FF
+        mov     ebx, [ebp + 8]
+        mov     [ebx], eax
+
+        pop     ebx
+
+        mov     esp, ebp
+        pop     ebp
+        ret
