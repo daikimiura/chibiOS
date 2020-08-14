@@ -26,6 +26,8 @@ kernel:
         ; カラーバーの表示
         cdecl   draw_color_bar, 63, 4
 
+        int     0
+
         ; 0除算による割り込みを生成
         mov     al, 0
         div     al
