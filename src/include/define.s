@@ -11,3 +11,5 @@ BOOT_END    equ     (BOOT_LOAD + BOOT_SIZE)
 KERNEL_LOAD equ     0x0010_1000 ; カーネルのロード位置
 
 E820_RECORD_SIZE    equ     20
+
+VECT_BASE   equ     0x0010_0000 ; 割り込みベクタテーブルの位置
