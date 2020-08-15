@@ -44,3 +44,9 @@ struc drive
         .head   resw    1 ; ヘッド
         .sect   resw    1 ; セクタ
 endstruc
+
+struc ring_buff
+        .rp     resd    1 ; 書き込み位置
+        .wp     resd    1 ; 読み込み位置
+        .item   resb    RING_ITEM_SIZE ; バッファ
+endstruc

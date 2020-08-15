@@ -13,3 +13,6 @@ KERNEL_LOAD equ     0x0010_1000 ; カーネルのロード位置
 E820_RECORD_SIZE    equ     20
 
 VECT_BASE   equ     0x0010_0000 ; 割り込みベクタテーブルの位置
+
+RING_ITEM_SIZE  equ (1 << 4) ; リングバッファのサイズ
+RING_INDEX_MASK equ RING_ITEM_SIZE - 1 ; リングバッファのインデックスを有効な範囲内に収めるためのマスク
