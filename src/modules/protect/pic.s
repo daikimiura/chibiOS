@@ -1,0 +1,20 @@
+init_pic:
+        push    eax
+
+        ; マスタPICの設定
+        outp    0x20, 0x11
+        outp    0x21, 0x20
+        outp    0x21, 0x04
+        outp    0x21, 0x01
+        outp    0x21, 0xFF
+
+        ; スレーブPICの設定
+        outp    0xA0, 0x11
+        outp    0xA1, 0x28
+        outp    0xA1, 0x02
+        outp    0xA1, 0x01
+        outp    0xA1, 0xFF
+
+        pop     eax
+
+        ret
