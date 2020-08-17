@@ -38,6 +38,27 @@
     out     %1, al
 %endmacro
 
+%macro  set_desc 2-*
+    push    eax
+    push    edi
+
+    mov     edi, %1 ; ディスクリプタのアドレス
+    mov     eax, %2 ; ベースアドレス
+
+    ; リミットが指定されたら設定
+    %if 3 == %0
+        mov     [edi + 0], %3
+    %endif
+
+    mov     [edi + 2], ax ; ベース([15:0])
+    shr     eax, 16
+    mov     [edi + 4], al ; ベース([23:16])
+    mov     [edi + 7], ah ; ベース([31:24])
+
+    pop     edi
+    pop     eax
+%endmacro
+
 struc drive
         .no     resw    1 ; ドライブ番号
         .cyln   resw    1 ; シリンダ

@@ -16,3 +16,10 @@ VECT_BASE   equ     0x0010_0000 ; 割り込みベクタテーブルの位置
 
 RING_ITEM_SIZE  equ (1 << 4) ; リングバッファのサイズ
 RING_INDEX_MASK equ RING_ITEM_SIZE - 1 ; リングバッファのインデックスを有効な範囲内に収めるためのマスク
+
+STACK_BASE      equ     0x0010_3000 ; タスク用スタックエリア
+STACK_SIZE      equ     1024 ; スタックサイズ(1KB)
+
+; アドレスの高い方から低い方へとスタックが伸びる
+SP_TASK_0       equ     STACK_BASE + (STACK_SIZE * 1) ; タスク0のスタックポインタの初期値
+SP_TASK_1       equ     STACK_BASE + (STACK_SIZE * 2) ; タスク0のスタックポインタの初期値
