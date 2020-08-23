@@ -2,6 +2,8 @@ draw_rect:
         push    ebp
         mov     ebp, esp
 
+        pusha
+
         mov     eax, [ebp + 8]
         mov     ebx, [ebp + 12]
         mov     ecx, [ebp + 16]
@@ -21,6 +23,8 @@ draw_rect:
         cdecl   draw_line, eax, ebx, eax, edx, esi ; 左線
         cdecl   draw_line, eax, edx, ecx, edx, esi ; 下線
         cdecl   draw_line, ecx, ebx, ecx, edx, esi ; 右線
+
+        popa
 
         mov     esp, ebp
         pop     ebp
