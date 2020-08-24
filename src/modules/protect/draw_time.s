@@ -6,6 +6,10 @@ draw_time:
         push    ebx
 
         mov     eax, [ebp + 20]
+        cmp     eax, [.last]
+        je      .10E
+
+        mov     [.last], eax
 
         movzx   ebx, al
         cdecl   itoa, ebx, .sec, 2, 16, 0b0100
@@ -18,6 +22,7 @@ draw_time:
 
         cdecl   draw_str, dword [ebp + 8], dword [ebp + 12], dword [ebp + 16], .hour
 
+.10E:
         pop     ebx
         pop     eax
 
@@ -26,6 +31,8 @@ draw_time:
 
         ret
 
+ALIGN 2, db     0
+.last   dq      0
 .hour   db      "  :"
 .min   db      "  :"
 .sec   db      "  ", 0

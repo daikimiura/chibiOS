@@ -25,3 +25,5 @@ SP_TASK_0       equ     STACK_BASE + (STACK_SIZE * 1) ; タスク0のスタッ�
 SP_TASK_1       equ     STACK_BASE + (STACK_SIZE * 2) ; タスク0のスタックポインタの初期値
 SP_TASK_2       equ     STACK_BASE + (STACK_SIZE * 3) ; タスク0のスタックポインタの初期値
 SP_TASK_3       equ     STACK_BASE + (STACK_SIZE * 4) ; タスク0のスタックポインタの初期値
+
+CR3_BASE        equ     0x0010_5000 ; ページ変換テーブル(タスク3用)
