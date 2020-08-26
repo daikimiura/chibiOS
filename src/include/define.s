@@ -25,5 +25,26 @@ SP_TASK_0       equ     STACK_BASE + (STACK_SIZE * 1) ; タスク0のスタッ�
 SP_TASK_1       equ     STACK_BASE + (STACK_SIZE * 2) ; タスク0のスタックポインタの初期値
 SP_TASK_2       equ     STACK_BASE + (STACK_SIZE * 3) ; タスク0のスタックポインタの初期値
 SP_TASK_3       equ     STACK_BASE + (STACK_SIZE * 4) ; タスク0のスタックポインタの初期値
+SP_TASK_4       equ     STACK_BASE + (STACK_SIZE * 5) ; タスク0のスタックポインタの初期値
+SP_TASK_5       equ     STACK_BASE + (STACK_SIZE * 6) ; タスク0のスタックポインタの初期値
+SP_TASK_6       equ     STACK_BASE + (STACK_SIZE * 7) ; タスク0のスタックポインタの初期値
+
+PARAM_TASK_4    equ     0x0010_8000
+PARAM_TASK_5    equ     0x0010_9000
+PARAM_TASK_6    equ     0x0010_A000
 
 CR3_BASE        equ     0x0010_5000 ; ページ変換テーブル(タスク3用)
+CR3_TASK_4      equ     0x0020_0000 ; ページ変換テーブル(タスク4用)
+CR3_TASK_5      equ     0x0020_2000 ; ページ変換テーブル(タスク5用)
+CR3_TASK_6      equ     0x0020_4000 ; ページ変換テーブル(タスク6用)
+
+FAT_SIZE        equ     (1024 * 128)
+ROOT_SIZE       equ     (1024 * 16)
+
+FAT1_START      equ     KERNEL_SIZE
+FAT2_START      equ     FAT1_START + FAT_SIZE
+ROOT_START      equ     FAT2_START + FAT_SIZE
+FILE_START      equ     ROOT_START + ROOT_SIZE
+
+ATTR_ARCHIVE    equ     0x20
+ATTR_VOLUME_ID  equ     0x08
